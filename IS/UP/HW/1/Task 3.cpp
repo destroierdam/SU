@@ -3,17 +3,13 @@ using namespace std;
 int main()
 {
     unsigned long long int n;
-    int br=0;
+    int cnt=0;
     cin>>n;
-    while(true)
+    while(n!=0)
     {
-        if(n!=0)
-        {
-            n/=10;
-            br++;
-        }
-        else break;
+        n/=10;
+        cnt++;
     }
-    cout<<"Number of digits : "<<br<<endl;
+    cout<<cnt<<endl;
     return 0;
 }
