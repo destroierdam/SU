@@ -58,20 +58,16 @@ void arrayToFile(const char *fileName, Product *p, int sz, bool withDescriptions
 }
 void fileToArray(const char *fileName, Product *p, int sz)
 {
-	char buff[32] = "";
 	ifstream in;
 	in.open(fileName, ios::in);
 	if (in.is_open())
 	{
 		for (int i = 0; i < sz; i++)
 		{
-			in.getline(buff, 32);
-			strcpy_s(p[i].description, sizeof(buff), buff);
+			in.getline(p[i].description, 32);
 
 			in >> p[i].partNum;
 			in >> p[i].cost;
-
-			strcpy_s(buff, sizeof(""), "");
 
 			char removeNewLine;
 			in.get(removeNewLine);
@@ -162,7 +158,7 @@ int main()
 	// (з) Да се дефинира втори масив и неговите елементи да се инициализират 
 	//     чрез прочитане на записаните от предната точка данни в съответния файл;
 
-	
+
 
 	Product arr2[5];
 
@@ -174,7 +170,7 @@ int main()
 
 	for (int i = 0; i < 5; i++)
 	{
-		showProduct(arr2[i]); 
+		showProduct(arr2[i]);
 		cout << endl;
 	}
 
