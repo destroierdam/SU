@@ -1,4 +1,4 @@
-// Week 3; Task 1
+// OOP Praktikum, Week 3, Task 1
 #include"stdafx.h"
 #include<iostream>
 #include<algorithm>
