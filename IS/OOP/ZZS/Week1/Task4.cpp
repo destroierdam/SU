@@ -6,43 +6,45 @@ struct Point
 	double x;
 	double y;
 };
+void copyPoint(Point* from, Point* to, int l, int r)
+{
+	int i;
+	for (i = 0; i < r - l + 1; i++)
+	{
+		to[i] = from[l + i];
+	}
+}
+
+// Returns whether the left element should go first
+// Compares first by X, then by Y
+int cmpXY(Point left, Point right)
+{
+	if (left.x < right.x) return 1;
+	if (left.x > right.x) return 0;
+	if (left.y < right.y) return 1;
+	if (left.y > right.y) return 0;
+
+	return 0; // Doesn't really matter. They are equal
+}
 void merge(Point arr[], int l, int m, int r)
 {
-	int i = 0, j = 0, k = l;
-	int szl = m - l + 1;
-	int szr = r - m;
+	int i, j, k, szl = m - l + 1, szr = r - m;
 
-	Point left[5], right[5];
+	Point *left = new Point[szl];
+	Point *right = new Point[szr];
 
-	for (i = 0; i < szl; i++)
-	{
-		left[i] = arr[l + i];
-	}
-
-	for (j = 0; j < szr; j++)
-	{
-		right[j] = arr[m + 1 + j];
-	}
+	copyPoint(arr, left, l, m);
+	copyPoint(arr, right, m + 1, r);
+	
 
 	for (i = 0, j = 0, k = l; i < szl && j < szr; k++)
 	{
-		if (left[i].x < right[j].x)
+		if (cmpXY(left[i], right[j])) 
 		{
+			// left element should go first
+
 			arr[k] = left[i];
 			i++;
-		}
-		else if (left[i].x == right[j].x)
-		{
-			if (left[i].y <= right[j].y)
-			{
-				arr[k] = left[i];
-				i++;
-			}
-			else
-			{
-				arr[k] = right[j];
-				j++;
-			}
 		}
 		else
 		{
@@ -50,7 +52,8 @@ void merge(Point arr[], int l, int m, int r)
 			j++;
 		}
 	}
-
+	
+	// copy the rest
 	for (; i < szl; i++, k++)
 	{
 		arr[k] = left[i];
@@ -59,6 +62,11 @@ void merge(Point arr[], int l, int m, int r)
 	{
 		arr[k] = right[j];
 	}
+	
+
+	delete[] left;
+	delete[] right;
+
 }
 void mergeSort(Point arr[], int l, int r)
 {
@@ -70,13 +78,6 @@ void mergeSort(Point arr[], int l, int r)
 		mergeSort(arr, m + 1, r);
 
 		merge(arr, l, m, r);
-	}
-}
-void print(Point *arr, int sz)
-{
-	for (int i = 0; i < sz; i++)
-	{
-		cout << arr[i].x << " " << arr[i].y << endl;
 	}
 }
 int main()
