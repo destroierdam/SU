@@ -1,6 +1,8 @@
 #ifndef _DLLIST_H_
 #define _DLLIST_H_
+#include<iostream>
 #include<cassert>
+using namespace std;
 template<class T>
 struct Node
 {
@@ -12,6 +14,12 @@ struct Node
         data = _data;
         next = _next;
         prev = _prev;
+    }
+    Node(const Node<T> & other)
+    {
+        this->data = other.data;
+        this->next = nullptr;
+        this->prev = nullptr;
     }
 };
 
@@ -25,20 +33,38 @@ class DLList
     Node<T> * last;
     size_t listSize;
 
-    void copy(const DLList<T> & other) const
+    void copy(const DLList<T> & other)
     {
         if(other.first == nullptr)
         {
+            assert(other.last == nullptr);
+
             this->first = nullptr;
             this->last = nullptr;
+
             return;
         }
 
 
-        while()
-        {
-            Node<T> * newNode = new Node<T>()
+        Node<T> * tracer = other.first;
 
+        while(tracer)
+        {
+            this->push_back(tracer->data);
+
+            cout<<"tracer->data: "<<tracer->data<<endl;
+
+            tracer = tracer->next;
+        }
+
+        this->listSize = other.listSize;
+    }
+    void destroy()
+    {
+        while(first != nullptr)
+        {
+            first = first->next;
+            delete first->prev;
         }
     }
 public:
@@ -47,11 +73,21 @@ public:
         first = last = nullptr;
         listSize = 0;
     }
-    DLList(const DLList<T> & other)
+    DLList(const DLList<T> & other):DLList()
     {
         copy(other);
     }
 
+    void print()
+    {
+        DLListIterator<T> it(*this);
+
+        for(it = this->begin();it != this->end();++it)
+        {
+            cout<<*it<<" ";
+        }
+        cout<<endl;
+    }
     void push_front(const T & newData)
     {
         Node<T> * newNode = new Node<T>(newData, first, nullptr);
@@ -83,7 +119,7 @@ public:
             first = newNode;
         }
         last = newNode;
-        listSize--;
+        listSize++;
     }
 
     void pop_front()
@@ -177,8 +213,16 @@ public:
     DLListIterator<T>& operator ++()
     {
         assert(cur != nullptr);
+
         cur = cur->next;
+        assert(cur != nullptr);
         return *this;
+    }
+
+    DLListIterator<T>& operator ++(int)
+    {
+        
+        return ++(*this);
     }
 
     DLListIterator<T>& operator --()
@@ -191,11 +235,14 @@ public:
         {
             cur = cur->prev;
         }
-
-        /// ????
-        /// assert(cur != nullptr);
+        assert(cur != nullptr);
 
         return *this;
+    }
+
+    DLListIterator<T>& operator--(int)
+    {
+        return --(*this);
     }
 
     DLListIterator<T>& operator = (DLListIterator<T> other)

@@ -4,22 +4,21 @@ using namespace std;
 int main()
 {
     DLList<int> l;
-    DLListIterator<int> it(l);
+    
+    l.push_back(2);
+    l.push_back(3);
+    l.push_back(5);
+    l.push_back(7);
 
-    l.push_front(5);
+    
+
+    DLList<int> l2(l);
+
+    DLListIterator<int> it(l2);
 
 
-
-    cout<<l.top()<<endl;
-
-    DLList<int> lCopy(l);
-    DLListIterator<int> lCopyIt(lCopy);
-
-
-    for(lCopyIt = lCopy.begin();lCopyIt != lCopy.end();++lCopyIt)
-    {
-        cout<<*it<<endl;
-    }
+    
+    it++;
 
     return 0;
 }
