@@ -51,9 +51,6 @@ class DLList
         while(tracer)
         {
             this->push_back(tracer->data);
-
-            cout<<"tracer->data: "<<tracer->data<<endl;
-
             tracer = tracer->next;
         }
 
@@ -61,10 +58,9 @@ class DLList
     }
     void destroy()
     {
-        while(first != nullptr)
+        while(listSize > 0)
         {
-            first = first->next;
-            delete first->prev;
+            pop_back();
         }
     }
 public:
@@ -77,6 +73,11 @@ public:
     {
         copy(other);
     }
+	DLList<T>& operator = (const DLList<T> & other)
+	{
+		destroy();
+		copy(other);
+	}
 
     void print()
     {
@@ -102,7 +103,6 @@ public:
         }
 
         first = newNode;
-
         listSize++;
     }
 
@@ -125,6 +125,7 @@ public:
     void pop_front()
     {
         assert(first != nullptr);
+
         Node<T> * toBeDeleted = first;
 
         first = first->next;
@@ -171,6 +172,18 @@ public:
         return this->listSize;
     }
 
+	int count(Node<T> * l,const T & x)
+	{
+		int br = 0;
+
+		while(l != nullptr)
+		{
+			br += (x == l->data);
+			l = l->next;
+		}
+		return br;
+	}
+
     DLListIterator<T> begin()
     {
         return DLListIterator<T> (*this);
@@ -182,7 +195,10 @@ public:
     }
 
 
-
+	~DLList()
+	{
+		destroy();
+	}
     friend class DLListIterator<T>;
 };
 
@@ -215,13 +231,13 @@ public:
         assert(cur != nullptr);
 
         cur = cur->next;
-        assert(cur != nullptr);
+        //assert(cur != nullptr);
         return *this;
     }
 
     DLListIterator<T>& operator ++(int)
     {
-        
+
         return ++(*this);
     }
 
@@ -235,7 +251,7 @@ public:
         {
             cur = cur->prev;
         }
-        assert(cur != nullptr);
+        //assert(cur != nullptr);
 
         return *this;
     }
