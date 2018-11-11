@@ -172,18 +172,6 @@ public:
         return this->listSize;
     }
 
-	int count(Node<T> * l,const T & x)
-	{
-		int br = 0;
-
-		while(l != nullptr)
-		{
-			br += (x == l->data);
-			l = l->next;
-		}
-		return br;
-	}
-
     DLListIterator<T> begin()
     {
         return DLListIterator<T> (*this);
