@@ -85,17 +85,19 @@ void append(Node<T> *& l1, Node<T> * l2)
         return;
     }
 
-    // Go to end of l1
-    Node<T> * cur = l1;
+
 
     if(l1 == nullptr)
     {
         //Add one element
-        l1 = new Node<T>(l2->data, nullptr, l2->next);
+        l1 = new Node<T>(l2->data, l2->next, nullptr);
 
         // Add the rest of the elements
         append(l1, l2->next);
     }
+
+    // Go to end of l1
+    Node<T> * cur = l1;
 
     while(cur->next != nullptr)
     {
@@ -112,26 +114,135 @@ void append(Node<T> *& l1, Node<T> * l2)
     }
 }
 
-int main()
+template<class T>
+Node<T> * concatCopy(Node<T> * l)
+{
+    Node<T> *res = nullptr;
+
+    if(l != nullptr)
+    {
+        res = new Node<T>(l->data,nullptr,nullptr);
+
+        Node<T> * temp = res;
+        while(l->next != nullptr)
+        {
+            temp->next = new Node<T>(l->next->data);
+
+            cout<<l<<endl;
+
+            l = l->next;
+
+            temp->next->prev = temp;
+            temp = temp->next;
+        }
+
+    }
+    return res;
+}
+
+template<class T>
+Node<T>* concat(Node<T> * l1, Node<T> * l2)
+{
+    Node<T> * first = nullptr;
+    Node<T> * first2 = nullptr;
+
+    if(l1 == nullptr && l2 == nullptr)
+        return nullptr;
+    if(l1 == nullptr)
+    {
+        Node<T> * first = concatCopy(l2);
+    }
+    else
+    {
+        first = concatCopy(l1);
+        first2 = concatCopy(l2);
+
+        Node<T> * cur = first;
+
+        while(cur->next != nullptr)
+        {
+            cur = cur->next;
+        }
+        cur->next = first2;
+        if(first2 != nullptr)
+        {
+            first2->prev = cur;
+        }
+    }
+    return first;
+
+}
+
+
+void testCount()
 {
     Node<int> * elem1 = new Node<int>(1, nullptr,nullptr);
-    Node<int> * elem2 = new Node<int>(2, elem1,nullptr);
-    Node<int> * elem3 = new Node<int>(3, elem2,nullptr);
+    Node<int> * elem2 = new Node<int>(1, nullptr,elem1);
+    Node<int> * elem3 = new Node<int>(2, nullptr,elem2);
+    Node<int> * elem4 = new Node<int>(3, nullptr,elem3);
+    Node<int> * elem5 = new Node<int>(3, nullptr,elem4);
+
+    elem1->next = elem2;
+    elem2->next = elem3;
+    elem3->next = elem4;
+    elem4->next = elem5;
+
+    assert(count(elem1,1) == 2);
+    assert(count(elem2,1) == 1);
+    assert(count(elem1,2) == 1);
+    assert(count(elem1,3) == 2);
+}
+
+void testConcatCopy()
+{
+    Node<int> * elem1 = new Node<int>(1, nullptr,nullptr);
+    Node<int> * elem2 = new Node<int>(2, nullptr,elem1);
+    Node<int> * elem3 = new Node<int>(3, nullptr,elem2);
 
     elem1->next = elem2;
     elem2->next = elem3;
 
+    assert(elem1->next->data == 2);
+    assert(elem2->next->data == 3);
 
-    Node<int> * elem4 = new Node<int>(1, nullptr,nullptr);
-    //Node<int> * elem5 = new Node<int>(2, elem4,nullptr);
-    //Node<int> * elem6 = new Node<int>(3, elem5,nullptr);
 
-    //elem4->next = elem4;
-    //elem5->next = elem4;
+    Node<int> * copied = concatCopy(elem1);
 
-    assert(elem3->next = elem4);
-    assert(elem4->prev = elem1);
-    assert(elem1->next->data = elem4->data);
+    assert(copied->prev == nullptr);
+    assert(copied->data == 1);
+    assert(copied->next != elem2);
+    assert(copied->next->prev == copied);
+    assert(copied->next->data == 2);
+    assert(copied->next->next != elem3);
+    assert(copied->next->next->prev != elem2);
+    assert(copied->next->next->data == 3);
+    assert(copied->next->next->next != elem3);
+}
+
+void testRemoveAll()
+{
+    Node<int> * elem1 = new Node<int>(1, nullptr,nullptr);
+    Node<int> * elem2 = new Node<int>(1, nullptr,elem1);
+    Node<int> * elem3 = new Node<int>(2, nullptr,elem2);
+    Node<int> * elem4 = new Node<int>(3, nullptr,elem3);
+    Node<int> * elem5 = new Node<int>(3, nullptr,elem4);
+
+    elem1->next = elem2;
+    elem2->next = elem3;
+    elem3->next = elem4;
+    elem4->next = elem5;
+
+    removeAll(elem1,1);
+
+    assert(elem1->data == 2);
+    assert(elem1->next == elem3);
+    assert(elem1->data == 2);
+    assert(elem1->data == 2);
+
+}
+int main()
+{
+    testCount();
     return 0;
 }
 

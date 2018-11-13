@@ -27,6 +27,9 @@ template<class T>
 class DLListIterator;
 
 template<class T>
+Node<T>* concat(Node<T> * l1, Node<T> * l2);
+
+template<class T>
 class DLList
 {
     Node<T> * first;
@@ -170,6 +173,20 @@ public:
     size_t size() const
     {
         return this->listSize;
+    }
+
+    DLList<T> operator + (DLList<T> & l)
+    {
+        Node<T> * newList = concat(first,l.first);
+        DLList<T> res;
+        res.first = newList;
+        assert((newList != nullptr));
+        while(newList->next != nullptr)
+        {
+            newList = newList->next;
+        }
+        res.last = newList;
+        return res;
     }
 
     DLListIterator<T> begin()
