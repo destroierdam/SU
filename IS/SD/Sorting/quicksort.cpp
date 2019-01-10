@@ -2,37 +2,21 @@
 #include<algorithm> // swap()
 using namespace std;
 
-// Switches between pivot representing A COPY of the pivot element, and pivot representing the INDEX of the pivot element
-#define pivotIsIndex 0
-// pivotIsIndex 1 doesn't work, but 0 works
-
 template<class T>
-#if pivotIsIndex
-int partitionArr(T arr[], int left, int right, int pivot) // not working
-#else
 int partitionArr(T arr[], int left, int right,const T& pivot) // working
-#endif // pivotIsIndex
 {
     while(left <= right)
     {
         // Move left to the leftmost element bigger than or equal to the pivot element
-
-        #if pivotIsIndex
-        while(arr[left] < arr[pivot]) // not working
-        #else
-        while(arr[left] < pivot) // working
-        #endif // pivotIsIndex
+        while(arr[left] < pivot)
+        
         {
             left++;
         }
 
         // Move right to the rightmost element less than or equal to the pivot element
-
-        #if pivotIsIndex
-        while(arr[pivot] < arr[right]) // not working
-        #else
-        while(pivot < arr[right]) // working
-        #endif // pivotIsIndex
+		
+        while(pivot < arr[right]) 
         {
             right--;
         }
@@ -53,11 +37,7 @@ void quicksort(T arr[],int left,int right)
     {
         // Choose middle item for pivot
 
-        #if pivotIsIndex
-        int pivot = left + (right - left) / 2; // not working
-        #else
         T pivot = arr[left + (right - left) / 2]; // working
-        #endif // pivotIsIndex
 
         int partIndex = partitionArr(arr,left,right,pivot);
 
